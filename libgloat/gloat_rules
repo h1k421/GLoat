@@ -1,0 +1,16 @@
+include $(DEVKITPRO)/devkitA64/base_rules
+
+PORTLIBS	:=	$(PORTLIBS_PATH)/gloat
+PATH		:=	$(PORTLIBS)/bin:$(PATH)
+
+GLOAT ?= $(DEVKITPRO)/gloat
+
+%.nso: %.elf
+	@elf2nso $< $@
+	@echo built ... $(notdir $@)
+
+#---------------------------------------------------------------------------------
+%.elf:
+	@echo linking $(notdir $@)
+	@$(LD) $(LDFLAGS) $(OFILES) $(LIBPATHS) $(LIBS) -o $@
+	@$(NM) -CSn $@ > $(notdir $*.lst)

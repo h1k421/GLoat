@@ -1,0 +1,7 @@
+%rename link                old_link
+
+*link:
+%(old_link) -T %:getenv(DEVKITPRO /gloat/application.ld) --shared --build-id=sha1 --undefined=nninitStartup --undefined=__module_start --undefined=malloc
+
+*startfile:
+crti%O%s crtbegin%O%s

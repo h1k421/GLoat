@@ -1,0 +1,9 @@
+*.tar.xz
+*.nso
+*.o
+*.d
+*.meph
+*.elf
+**/exefs
+**/build
+external/egl/EGL-Registry

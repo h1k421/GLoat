@@ -1,0 +1,21 @@
+pkgname=gloat-tinyxml2
+pkgver=7.0.1
+pkgrel=1
+pkgdesc="A simple, small, efficient, C++ XML parser"
+arch=('any')
+license=('zlib')
+url="http://grinninglizard.com/tinyxml2/index.html"
+options=(!strip libtool staticlibs)
+source=()
+makedepends=('devkitA64' 'libgloat')
+
+groups=('gloat-dev')
+
+build() {
+    cd "$startdir"
+    make
+}
+
+package() {
+    make -C $startdir DESTDIR=$pkgdir install
+}

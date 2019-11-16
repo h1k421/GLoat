@@ -1,0 +1,31 @@
+pkgname=gloat-egl
+pkgver=1.5.0.r188
+_pkgver=1.5.0
+pkgrel=1
+pkgdesc="EGL Core API Headers"
+arch=('any')
+license=('custom')
+url="https://www.khronos.org/registry/EGL/"
+source=('git+https://github.com/KhronosGroup/EGL-Registry' 'Makefile' '0001-Add-GLoat-platform.patch')
+sha1sums=('SKIP' 'SKIP' 'SKIP')
+makedepends=('devkitA64' 'libgloat' 'patch')
+groups=('gloat-dev')
+
+build() {
+    cd "$srcdir/EGL-Registry"
+    pwd
+    patch -p1 -i "$srcdir/0001-Add-GLoat-platform.patch"
+    make -C $srcdir
+}
+
+package() {
+    make -C $srcdir DESTDIR=$pkgdir install
+}
+
+pkgver() {
+  cd "$srcdir"/EGL-Registry/sdk/docs/man
+
+  printf '%s.r%d' \
+    "$_pkgver" \
+    $(git rev-list --count $(git log -1 --format=%h .))
+}

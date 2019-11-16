@@ -1,0 +1,29 @@
+From 283ac6b4b0d8f2165235be4612290e492348d76f Mon Nov 16 00:00:00 2001
+From: Hikari <57835969+h1k421@users.noreply.github.com>
+Date: Tue, 15 Nov 2019 23:47:03 +0100
+Subject: [PATCH] Add GLoat platform
+
+---
+ api/EGL/eglplatform.h | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/api/EGL/eglplatform.h b/api/EGL/eglplatform.h
+index 6d0d8db..1bdbd74 100644
+--- a/api/EGL/eglplatform.h
++++ b/api/EGL/eglplatform.h
+@@ -134,6 +134,12 @@ typedef void              *EGLNativeDisplayType;
+ typedef khronos_uintptr_t  EGLNativePixmapType;
+ typedef khronos_uintptr_t  EGLNativeWindowType;
+ 
++#elif defined(__SWITCH__)
++
++typedef void *EGLNativeDisplayType;
++typedef void *EGLNativePixmapType;
++typedef void *EGLNativeWindowType;
++
+ #else
+ #error "Platform not recognized"
+ #endif
+-- 
+2.21.0
+

@@ -1,0 +1,21 @@
+pkgname=libgloat
+pkgver=0.0.0
+pkgrel=1
+pkgdesc="gloat in the distance"
+arch=('any')
+license=('custom')
+url="https://github.com/h1k421/GLoat"
+options=(!strip libtool staticlibs)
+source=()
+makedepends=('devkitA64' 'tar' 'bzip2')
+
+groups=('gloat-dev')
+
+build() {
+    cd "$startdir"
+    make
+}
+
+package() {
+    make -C $startdir DESTDIR=$pkgdir install
+}
