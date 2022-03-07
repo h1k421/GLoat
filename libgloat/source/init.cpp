@@ -1,34 +1,14 @@
+#include <stdlib.h>
+
 #include <gloat.hpp>
 
-char allocator_storage[sizeof(nn::mem::StandardAllocator)];
-
-nn::mem::StandardAllocator* GetAllocator(void) {
-    nn::mem::StandardAllocator* allocator =
-        reinterpret_cast<nn::mem::StandardAllocator*>(allocator_storage);
-
-    if (allocator->IsInitialized()) {
-        return allocator;
-    }
-
-    return nullptr;
-}
-
 void* __custom_allocator(size_t size, size_t alignment) {
-    nn::mem::StandardAllocator* allocator = GetAllocator();
+    size = (size + alignment - 1) & ~(alignment - 1);
 
-    if (allocator != nullptr) {
-        return allocator->Allocate(size, alignment);
-    }
-
-    return nullptr;
+    return aligned_alloc(alignment, size);
 }
 
-void __custom_deallocator(void* ptr, size_t size) {
-    nn::mem::StandardAllocator* allocator = GetAllocator();
-    if (allocator != nullptr) {
-        allocator->Free(ptr);
-    }
-}
+void __custom_deallocator(void* ptr, size_t size) { free(ptr); }
 
 extern unsigned char __code_start__[];
 extern unsigned char __code_end__[];
@@ -121,16 +101,14 @@ extern "C" void __custom_fini(void) {
 
 extern "C" size_t __gloat_get_heap_size() { return 0; }
 
-extern volatile void* heap_address;
-extern volatile size_t heap_size;
-extern "C" void setupNewLibHeap(void);
+volatile void* heap_address;
+volatile size_t heap_size;
+extern "C" void setupNewLibHeap(void* heap_start, size_t heap_size);
 
 extern "C" WEAK void nninitStartup(void) {
     // Clean up some stuffs to make sure that we don't catch garbage
     heap_address = nullptr;
     heap_size = 0;
-
-    setupNewLibHeap();
 
     debug_log("Hello from nninitStartup");
 
@@ -160,13 +138,7 @@ extern "C" WEAK void nninitStartup(void) {
         gloat::utils::Abort(&result);
     }
 
-    // We store the object in a plain char array because we don't want a
-    // global constructor to destroy everything.
-    // TODO: inplace new
-    nn::mem::StandardAllocator new_allocator;
-    new_allocator.Initialize((void*)heap_address, heap_size);
-    memcpy(allocator_storage, &new_allocator,
-           sizeof(nn::mem::StandardAllocator));
+    setupNewLibHeap((void*)heap_address, heap_size);
 
     nn::os::SetMemoryAllocatorForThreadLocal(__custom_allocator,
                                              __custom_deallocator);
