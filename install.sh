@@ -12,7 +12,7 @@ make clean
 rm *.tar.*
 popd
 
-pushd external/opengl
+pushd external/glad
 makepkg -sfci
 make clean
 rm *.tar.*

@@ -1,0 +1,21 @@
+pkgname=gloat-glad
+pkgver=0.1.35
+pkgrel=1
+pkgdesc="OpenGL Loader"
+arch=('any')
+license=('mit')
+url="https://github.com/Dav1dde/glad"
+options=(!strip libtool staticlibs)
+source=()
+makedepends=('devkitA64' 'libgloat' 'gloat-egl')
+
+groups=('gloat-dev')
+
+build() {
+    cd "$startdir"
+    make
+}
+
+package() {
+    make -C $startdir DESTDIR=$pkgdir install
+}

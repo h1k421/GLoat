@@ -1,5 +1,5 @@
 pkgname=gloat-egl
-pkgver=1.5.0.r188
+pkgver=1.5.0.r235
 _pkgver=1.5.0
 pkgrel=1
 pkgdesc="EGL Core API Headers"
